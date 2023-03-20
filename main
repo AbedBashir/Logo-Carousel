@@ -1,0 +1,107 @@
+{{ 'logo-carousel.css' | asset_url | stylesheet_tag }}
+
+{%- capture flickity_options -%}
+{
+  "prevNextButtons": false,
+  "pageDots": false,
+  "autoPlay": true,
+  "contain": true,
+  "cellAlign": "left",
+  "groupCells": true,
+  "arrowShape": {"x0": 20, "x1": 60, "y1": 40, "x2": 60, "y2": 35, "x3": 25}
+}
+{%- endcapture -%}
+
+<div class="featured-collection-slider wrapper">
+{% if section.settings.title != blank %}
+  <h2 class="home__subtitle">{{ section.settings.title | escape }}</h2>
+{% endif %}
+ 
+    <div class="products-carousel js-flickity" data-flickity='{{ flickity_options }}'>
+        {%- for block in section.blocks -%}
+        <div class="carousel-cell">
+          <a href="{{ block.settings.link }}">
+              {%- if block.settings.image != blank -%}
+                {%- assign img_url = block.settings.image | img_url: '1x1' | replace: '_1x1.', '_{width}x.' -%}
+                <img class="logo-bar__image lazyload"
+                    data-src="{{ img_url }}"
+                    data-widths="[360, 540, 720, 1020]"
+                    data-aspectratio="{{ block.settings.image.aspect_ratio }}"
+                    data-sizes="auto"
+                    alt="{{ block.settings.image.alt }}">
+              {%- else -%}
+                {{ 'logo' | placeholder_svg_tag: 'placeholder-svg placeholder-svg--no-padding' }}
+              {%- endif -%}    
+
+          </a>
+      </div>  
+    {% endfor %}
+    </div>
+</div>
+
+{% schema %}
+  {
+    "name": "Logo carousel",
+    "class": "index-section",
+    "max_blocks": 12,
+    "settings": [
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Heading",
+        "default": "Our brands"
+      },
+      {
+        "type": "checkbox",
+        "id": "divider",
+        "label": "Show section divider",
+        "default": false
+      }
+    ],
+    "blocks": [
+      {
+        "type": "logo_image",
+        "name": "Logo",
+        "settings": [
+          {
+            "type": "image_picker",
+            "id": "image",
+            "label": "Image",
+            "info": "Add alt text for better SEO with 'Edit' button above"
+          },
+          {
+            "type": "url",
+            "id": "link",
+            "label": "Link",
+            "info": "Optional"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "Logo Carousel",
+        "blocks": [
+          {
+            "type": "logo_image"
+          },
+          {
+            "type": "logo_image"
+          },
+          {
+            "type": "logo_image"
+          },
+          {
+            "type": "logo_image"
+          },
+          {
+            "type": "logo_image"
+          },
+          {
+            "type": "logo_image"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}
